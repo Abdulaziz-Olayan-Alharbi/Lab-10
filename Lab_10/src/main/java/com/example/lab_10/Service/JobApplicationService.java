@@ -22,21 +22,21 @@ public class JobApplicationService {
     }
 
     public String apply(JobApplication jobApplication) {
-        if (userRepository.existsById(jobApplication.getUserId())) {
+        if (userRepository.existsById(jobApplication.getUserId()) && userRepository.getById(jobApplication.getUserId()).getRole().equals("JOB_SEEKER")) {
             if (jobpostRepository.existsById(jobApplication.getJobPostId())) {
                 jobApplicationRepository.save(jobApplication);
                 return "true";
             }
             return "Job Post Not Found";
         }
-        return "User Not Found";
+        return "Job Seeker Not Found";
     }
 
 
     public String updateJobApplication(Integer id,JobApplication jobApplication) {
         JobApplication j = jobApplicationRepository.getById(id);
         if (j != null) {
-            if (userRepository.existsById(jobApplication.getUserId())) {
+            if (userRepository.existsById(jobApplication.getUserId()) && userRepository.getById(jobApplication.getUserId()).getRole().equals("JOB_SEEKER")) {
                 if (jobpostRepository.existsById(jobApplication.getJobPostId())) {
                     j.setJobPostId(jobApplication.getJobPostId());
                     j.setUserId(jobApplication.getUserId());
@@ -45,7 +45,7 @@ public class JobApplicationService {
                 }
                 return "Job Post Not Found";
             }
-            return "User Not Found";
+            return "Job Seeker Not Found";
         }
         return "Job Application Not Found";
     }
